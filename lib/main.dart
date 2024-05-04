@@ -48,6 +48,11 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int currentPageIndex = 0;
+  void _onTabTapped(int index) {
+    setState(() {
+      currentPageIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +94,7 @@ class _MainPageState extends State<MainPage> {
             child: Padding(
                 padding: const EdgeInsets.fromLTRB(10, 40, 10, 0),
                 child: [
-                  const HomePage(),
+                  HomePage(onTabChanged: _onTabTapped),
                   const Center(child: Text("Library")),
                   const Library(),
                   const Center(

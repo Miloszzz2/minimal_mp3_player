@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:minimal_mp3_player/components/playlist_home.dart';
+import 'package:minimal_mp3_player/components/playlist_home_component.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final Function(int) onTabChanged;
+
+  const HomePage({Key? key, required this.onTabChanged}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -39,13 +41,14 @@ class _HomePageState extends State<HomePage> {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      crossAxisSpacing: 5.0,
-                      mainAxisSpacing: 5.0,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
                     ),
                     itemCount: playlists.length,
                     itemBuilder: ((context, index) {
                       final playlist = playlists[index];
                       return PlaylistContainer(
+                        onTabChanged: widget.onTabChanged,
                         text: playlist['name'],
                       );
                     }),
