@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:minimal_mp3_player/widgets/home.dart';
+import 'package:minimal_mp3_player/widgets/download.dart';
 import 'package:minimal_mp3_player/widgets/library.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -48,11 +48,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int currentPageIndex = 0;
-  void _onTabTapped(int index) {
-    setState(() {
-      currentPageIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,19 +62,14 @@ class _MainPageState extends State<MainPage> {
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
+            selectedIcon: Icon(Icons.library_music),
+            icon: Icon(Icons.library_music_outlined),
+            label: 'Library',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.download),
             icon: Icon(Icons.download_outlined),
             label: 'Download',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.library_music),
-            icon: Icon(Icons.library_music_outlined),
-            label: 'Library',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.settings),
@@ -92,11 +82,10 @@ class _MainPageState extends State<MainPage> {
         children: [
           Expanded(
             child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 40, 10, 0),
+                padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
                 child: [
-                  HomePage(onTabChanged: _onTabTapped),
-                  const Center(child: Text("Library")),
                   const Library(),
+                  const Download(),
                   const Center(
                     child: Text("Settings"),
                   )
