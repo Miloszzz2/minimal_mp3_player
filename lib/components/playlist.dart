@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
-import 'package:minimal_mp3_player/player/common.dart';
 import 'package:minimal_mp3_player/player/player.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
