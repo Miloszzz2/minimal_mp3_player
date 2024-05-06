@@ -46,17 +46,25 @@ Future<void> downloadMp3FileFromYoutube(String url, int playlistId) async {
   // Close the file.
   await fileStream.flush();
   await fileStream.close();
-  await Supabase.instance.client.from("songs").upsert({
-    "name": title,
-    "author": author,
-    "playlistId": playlistId,
-    "nameWithoutSpecialChars": name
-  }, onConflict: 'name, playlistId');
+
   await Supabase.instance.client.storage.from('songs').upload(
         'public/$name.mp3',
         file,
         fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
       );
+
+  String publicUrl = Supabase.instance.client.storage
+      .from('songs')
+      .getPublicUrl('public/$name.mp3');
+
+  await Supabase.instance.client.from("songs").upsert({
+    "name": title,
+    "author": author,
+    "playlistId": playlistId,
+    "nameWithoutSpecialChars": name,
+    "publicUrl": publicUrl
+  }, onConflict: 'name, playlistId');
+
   await file.delete();
   yt.close();
 }

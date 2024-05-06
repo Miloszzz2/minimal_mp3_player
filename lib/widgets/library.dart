@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:minimal_mp3_player/components/playlist.dart';
 import 'package:minimal_mp3_player/structs/playlist.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -52,12 +52,6 @@ class LibraryMainScreen extends StatefulWidget {
 class _LibraryMainScreenState extends State<LibraryMainScreen> {
   final TextEditingController _playlistNameController = TextEditingController();
   final _playlists = Supabase.instance.client.from('playlists').select();
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed
-    _playlistNameController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,141 +170,6 @@ class _LibraryMainScreenState extends State<LibraryMainScreen> {
             child: const Icon(Icons.add),
           ),
         ),
-      ],
-    );
-  }
-}
-
-/// The details screen
-class PlaylistScreen extends StatefulWidget {
-  // Corrected constructor declaration
-  final String? id;
-
-  const PlaylistScreen({Key? key, required this.id}) : super(key: key);
-
-  @override
-  State<PlaylistScreen> createState() => _PlaylistScreenState();
-}
-
-class _PlaylistScreenState extends State<PlaylistScreen> {
-  late String? id;
-  late PostgrestFilterBuilder _songs; // Declare _songs here
-  late PostgrestFilterBuilder _playlistName;
-  final _player = AudioPlayer();
-  @override
-  void dispose() {
-    // Release decoders and buffers back to the operating system making them
-    // available for other apps to use.
-    _player.dispose();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    id = widget.id;
-    if (id != null) {
-      _songs = Supabase.instance.client
-          .from('songs')
-          .select()
-          .eq("playlistId", int.parse(widget.id ?? ""));
-    }
-    _playlistName = Supabase.instance.client
-        .from("playlists")
-        .select()
-        .eq('id', int.parse(widget.id ?? ""));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Flex(
-          direction: Axis.horizontal,
-          children: [
-            IconButton(
-                onPressed: () {
-                  context.go("/");
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
-                )),
-            const SizedBox(
-              width: 10,
-            ),
-            FutureBuilder(
-                future: _playlistName,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    var playlist = snapshot.data;
-                    return Text(
-                      playlist[0]['name'],
-                      style: const TextStyle(
-                          fontSize: 28, fontWeight: FontWeight.bold),
-                    );
-                  } else {
-                    return const Text(
-                      "Loading...",
-                      style:
-                          TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                    );
-                  }
-                })
-          ],
-        ),
-        FutureBuilder(
-            future: _songs, // Call query() on _songs
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Expanded(
-                    child: Center(child: CircularProgressIndicator()));
-              }
-              final songs = snapshot.data!;
-              if (songs.length > 0) {
-                return ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  shrinkWrap: true,
-                  itemCount: songs.length,
-                  itemBuilder: ((BuildContext context, int index) {
-                    final song = songs[index];
-                    return GestureDetector(
-                      onTap: () async {
-                        try {
-                          final String url = Supabase.instance.client.storage
-                              .from("songs")
-                              .getPublicUrl(
-                                  "public/${song["nameWithoutSpecialChars"]}.mp3");
-                          debugPrint(song["nameWithoutSpecialChars"]);
-                          // AAC example: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.aac
-                          await _player
-                              .setAudioSource(AudioSource.uri(Uri.parse(url)));
-                        } on PlayerException catch (e) {
-                          debugPrint("Error loading audio source: $e");
-                        }
-                        await _player.play();
-                      },
-                      child: ListTile(
-                        dense: true,
-                        title: Text(
-                          "${(index + 1).toString()} . ${song["name"]} - ${song["author"]}",
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 20),
-                        ),
-                      ),
-                    );
-                  }),
-                );
-              } else {
-                return const Expanded(
-                  child: Center(
-                      child: Text(
-                    "No songs on this playlist",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  )),
-                );
-              }
-            }),
       ],
     );
   }
