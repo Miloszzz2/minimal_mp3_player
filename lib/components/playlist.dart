@@ -19,7 +19,6 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   late String? id;
   late PostgrestFilterBuilder _songs; // Declare _songs here
   late PostgrestFilterBuilder _playlistName;
-
   @override
   void initState() {
     super.initState();
@@ -90,6 +89,14 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                   itemBuilder: ((BuildContext context, int index) {
                     final song = songs[index];
                     return GestureDetector(
+                      onDoubleTap: () async {
+                        await playlist.add(AudioSource.uri(
+                            Uri.parse(song["publicUrl"]),
+                            tag: MediaItem(
+                                id: song["id"].toString(),
+                                title: song["name"].toString())));
+                        debugPrint(song["id"].toString());
+                      },
                       onTap: () async {
                         try {
                           List<dynamic> songsToPlaylist = [];
@@ -105,13 +112,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                       title: song["name"].toString())))
                               .toList();
 
-                          final playlist = ConcatenatingAudioSource(
-                            useLazyPreparation: true,
-                            shuffleOrder: DefaultShuffleOrder(),
-                            children: audioSources,
-                          );
-
-                          debugPrint(songsToPlaylist.toString());
+                          await playlist.clear();
+                          await playlist.addAll(audioSources);
+                          debugPrint("one tap");
 
                           await player.setAudioSource(playlist,
                               initialIndex: 0, initialPosition: Duration.zero);
