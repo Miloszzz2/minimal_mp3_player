@@ -37,6 +37,14 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
+  @override
+  void dispose() {
+    // Release decoders and buffers back to the operating system making them
+    // available for other apps to use.
+    player.dispose();
+    super.dispose();
+  }
+
   Future<void> _redirect() async {
     await Future.delayed(Duration.zero);
     if (!mounted) {

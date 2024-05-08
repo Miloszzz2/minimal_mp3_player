@@ -62,7 +62,7 @@ class _SettingsState extends State<Settings> {
                   : "Login"),
               onPressed: () {
                 if (Supabase.instance.client.auth.currentUser != null) {
-                  _signOut;
+                  _signOut();
                 } else {
                   Navigator.of(context).pushReplacementNamed('/login');
                 }
