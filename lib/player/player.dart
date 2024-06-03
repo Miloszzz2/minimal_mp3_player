@@ -1,7 +1,8 @@
-library player;
-
+import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 
-final AudioPlayer player = AudioPlayer();
-final ConcatenatingAudioSource playlist =
-    ConcatenatingAudioSource(children: []);
+class AppStateStore with ChangeNotifier, DiagnosticableTreeMixin {
+  final AudioPlayer audioPlayer = AudioPlayer();
+  final ConcatenatingAudioSource playlist =
+      ConcatenatingAudioSource(children: []);
+}

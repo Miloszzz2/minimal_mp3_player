@@ -75,7 +75,7 @@ class _DownloadState extends State<Download> {
                 }),
             ShadInput(
               controller: _urlTextController,
-              placeholder: const Text("Url to youtube song"),
+              placeholder: const Text("Url to youtube"),
             ),
             ShadButton(
               text: const Text("Download"),

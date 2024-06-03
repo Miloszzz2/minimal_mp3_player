@@ -37,6 +37,7 @@ class Library extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShadApp.router(
+      debugShowCheckedModeBanner: false,
       routerConfig: _router,
     );
   }

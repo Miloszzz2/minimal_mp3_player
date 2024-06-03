@@ -9,6 +9,7 @@ import 'package:minimal_mp3_player/widgets/library.dart';
 import 'package:minimal_mp3_player/widgets/settings.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,7 +20,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentPageIndex = 0;
-
+  late final player =
+      Provider.of<AppStateStore>(context, listen: false).audioPlayer;
   Stream<PositionData> _positionDataStream() =>
       Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
           player.positionStream,
@@ -41,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     // Release decoders and buffers back to the operating system making them
     // available for other apps to use.
-    player.dispose();
+    Provider.of<AppStateStore>(context, listen: false).audioPlayer.dispose();
     super.dispose();
   }
 
@@ -114,7 +116,9 @@ class _HomePageState extends State<HomePage> {
                   height: 20,
                 ),
                 StreamBuilder<SequenceState?>(
-                  stream: player.sequenceStateStream,
+                  stream: Provider.of<AppStateStore>(context)
+                      .audioPlayer
+                      .sequenceStateStream,
                   builder: (context, snapshot) {
                     final state = snapshot.data;
                     if (state?.sequence.isEmpty ?? true) {

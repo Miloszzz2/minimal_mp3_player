@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:minimal_mp3_player/player/player.dart';
 import 'package:minimal_mp3_player/widgets/account.dart';
 import 'package:minimal_mp3_player/widgets/home.dart';
 import 'package:minimal_mp3_player/widgets/login.dart';
@@ -7,6 +8,7 @@ import 'package:minimal_mp3_player/widgets/splash.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +28,14 @@ Future<void> main() async {
     androidNotificationChannelName: 'Audio playback',
     androidNotificationOngoing: true,
   );
-  runApp(const MainApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AppStateStore()),
+      ],
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -35,6 +44,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShadApp(
+      debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
         '/': (_) => const SplashPage(),
         '/home': (_) => const HomePage(),
@@ -46,7 +56,6 @@ class MainApp extends StatelessWidget {
         brightness: Brightness.light,
         colorScheme: const ShadZincColorScheme.dark(),
         textTheme: ShadTextTheme(
-          colorScheme: const ShadZincColorScheme.light(),
           family: 'Geist',
         ),
       ),

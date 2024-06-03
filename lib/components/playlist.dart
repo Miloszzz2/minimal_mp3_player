@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:minimal_mp3_player/player/player.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PlaylistScreen extends StatefulWidget {
@@ -19,6 +20,10 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   late String? id;
   late PostgrestFilterBuilder _songs; // Declare _songs here
   late PostgrestFilterBuilder _playlistName;
+  late final player =
+      Provider.of<AppStateStore>(context, listen: false).audioPlayer;
+  late final playlist =
+      Provider.of<AppStateStore>(context, listen: false).playlist;
   @override
   void initState() {
     super.initState();
@@ -114,15 +119,14 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
 
                           await playlist.clear();
                           await playlist.addAll(audioSources);
-                          debugPrint("one tap");
 
                           await player.setAudioSource(playlist,
                               initialIndex: 0, initialPosition: Duration.zero);
+
+                          await player.play();
                         } on PlayerException catch (e) {
                           debugPrint("Error loading audio source: $e");
                         }
-
-                        await player.play();
                       },
                       child: ListTile(
                         dense: true,
