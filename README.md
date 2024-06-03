@@ -1,3 +1,3 @@
-# minimal_mp3_player
+# Minimal Mp3 Player
 
-A new Flutter project.
+Minimalistic audio player that allows you to download songs from web and save it on the cloud (Supabase storage)
