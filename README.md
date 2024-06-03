@@ -5,8 +5,9 @@ A Flutter Music Player app that allows users to download songs from YouTube and 
 ## Screenshots
 
 ### Screenshots
-![mp31](https://github.com/Miloszzz2/minimal_mp3_player/assets/97192271/2f25733c-d93e-4a3f-b5b5-75b9b2369933)
+![image](https://github.com/Miloszzz2/minimal_mp3_player/assets/97192271/efe4f5a9-7edf-48a3-ad2e-31ef5598ba1f)
 ![mp32](https://github.com/Miloszzz2/minimal_mp3_player/assets/97192271/359aa0f4-0455-48a2-bd4b-0abcde64c2fb)
+![image](https://github.com/Miloszzz2/minimal_mp3_player/assets/97192271/02fad0cd-5e95-4f8b-84dc-1e52796dbd7d)
 
 
 ## Features
